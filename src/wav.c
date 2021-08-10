@@ -1259,7 +1259,7 @@ static int wavwritehdr(sox_format_t * ft, int second_header)
     wChannels = ft->signal.channels;
     wBitsPerSample = ft->encoding.bits_per_sample;
     wSamplesPerBlock = 1;       /* common default for PCM data */
-
+    lsx_warn("Premature EOF on .wav input file wBitsPerSample %i dwSamplesPerSecond %i wChannels %i",wBitsPerSample,dwSamplesPerSecond,wChannels);
     switch (ft->encoding.encoding)
     {
         case SOX_ENCODING_UNSIGNED:
@@ -1272,6 +1272,7 @@ static int wavwritehdr(sox_format_t * ft, int second_header)
             wFormatTag = WAVE_FORMAT_IEEE_FLOAT;
             bytespersample = (wBitsPerSample + 7)/8;
             wBlockAlign = wChannels * bytespersample;
+            lsx_warn("Premature EOF on .wav input file wFormatTag %i bytespersample %i wBlockAlign %i",wFormatTag,bytespersample,wBlockAlign);
             break;
         case SOX_ENCODING_ALAW:
             wFormatTag = WAVE_FORMAT_ALAW;
@@ -1401,7 +1402,7 @@ static int wavwritehdr(sox_format_t * ft, int second_header)
     lsx_writedw(ft, dwAvgBytesPerSec);
     lsx_writew(ft, wBlockAlign);
     lsx_writew(ft, wBitsPerSample); /* end info common to all fmts */
-
+    lsx_warn("writing wRiffLength %i wFmtSize %i  WAVE_FORMAT_EXTENSIBLE %i wChannels %i dwSamplesPerSecond%i dwAvgBytesPerSec %i wBlockAlign %i wBitsPerSample %i",wRiffLength,wFmtSize,WAVE_FORMAT_EXTENSIBLE,wChannels,dwSamplesPerSecond,dwAvgBytesPerSec,wBlockAlign,wBitsPerSample);
     if (isExtensible) {
       uint32_t dwChannelMask=0;  /* unassigned speaker mapping by default */
       static unsigned char const guids[][14] = {
